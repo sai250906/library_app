@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+    <div class="glass-card" style="width: 100%; max-width: 450px;">
+        <h2 style="text-align: center; margin-bottom: 2rem; font-size: 1.8rem;">Welcome</h2>
+        
+        <!-- Tabs for User vs Admin Login -->
+        <div style="display: flex; border-bottom: 1px solid var(--glass-border); margin-bottom: 2rem;">
+            <button onclick="switchTab('user')" id="btn-user" style="flex: 1; padding: 1rem; background: transparent; border: none; color: var(--accent-color); border-bottom: 2px solid var(--accent-color); cursor: pointer; font-weight: 600;">Student</button>
+            <button onclick="switchTab('admin')" id="btn-admin" style="flex: 1; padding: 1rem; background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600;">Administrator</button>
+        </div>
+
+        <!-- User Login Form -->
+        <form id="form-user" method="POST" action="{{ url_for('login') }}">
+            <input type="hidden" name="login_type" value="user">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <div style="margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login as Student</button>
+            </div>
+            <div style="text-align: center; margin-top: 1.2rem; color: var(--text-muted); font-size: 0.9rem;">
+                Don't have an account? <a href="{{ url_for('register') }}" style="color: var(--accent-color); text-decoration: none;">Sign up here</a>
+            </div>
+        </form>
+
+        <!-- Admin Login Form -->
+        <form id="form-admin" method="POST" action="{{ url_for('login') }}" style="display: none;">
+            <input type="hidden" name="login_type" value="admin">
+            <div class="form-group">
+                <label for="admin_password">Admin Password</label>
+                <input type="password" id="admin_password" name="admin_password" class="form-control" placeholder="Enter admin password" required>
+            </div>
+            <div style="margin-top: 2rem;">
+                <button type="submit" class="btn btn-secondary" style="width: 100%;">Login as Administrator</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function switchTab(type) {
+        const btnUser = document.getElementById('btn-user');
+        const btnAdmin = document.getElementById('btn-admin');
+        const formUser = document.getElementById('form-user');
+        const formAdmin = document.getElementById('form-admin');
+
+        if(type === 'user') {
+            btnUser.style.color = 'var(--accent-color)';
+            btnUser.style.borderBottom = '2px solid var(--accent-color)';
+            btnAdmin.style.color = 'var(--text-muted)';
+            btnAdmin.style.borderBottom = 'none';
+            formUser.style.display = 'block';
+            formUser.querySelector('input[name="username"]').required = true;
+            formUser.querySelector('input[name="password"]').required = true;
+            formAdmin.style.display = 'none';
+            formAdmin.querySelector('input[name="admin_password"]').required = false;
+        } else {
+            btnAdmin.style.color = 'var(--accent-secondary)';
+            btnAdmin.style.borderBottom = '2px solid var(--accent-secondary)';
+            btnUser.style.color = 'var(--text-muted)';
+            btnUser.style.borderBottom = 'none';
+            formAdmin.style.display = 'block';
+            formAdmin.querySelector('input[name="admin_password"]').required = true;
+            formUser.style.display = 'none';
+            formUser.querySelector('input[name="username"]').required = false;
+            formUser.querySelector('input[name="password"]').required = false;
+        }
+    }
+</script>
+{% endblock %}
